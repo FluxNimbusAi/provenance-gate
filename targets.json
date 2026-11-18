@@ -1,0 +1,14 @@
+{
+  "schema_version": "2026-11-17.v1",
+  "owner": "FluxNimbusAi",
+  "cutoff_utc": "2026-11-17T00:00:00Z",
+  "repos": [
+    { "name": "tanda",              "trailers": true, "residue": true },
+    { "name": "tanda-miniapp",      "trailers": true, "residue": true },
+    { "name": "strata-field-notes", "trailers": true, "residue": true },
+    { "name": "worldapp-recon",     "trailers": true, "residue": true },
+    { "name": "provenance-gate",    "trailers": true, "residue": true }
+  ],
+  "residue_extra_patterns": [],
+  "notes": "Forks (Strata, py-clob-client*, py-sdk) are intentionally OUT of home-turf scope: upstream commits carry the maintainer voice, not swarm trailers."
+}
