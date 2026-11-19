@@ -2,10 +2,19 @@
 # commit-msg hook — provenance gate (fail-closed). Copy into .git/hooks/commit-msg.
 # Resolver order: $PROVGATE env, repo-root/provgate.py, installed nimbus scripts copy.
 # No resolver found -> REJECT the commit (fail-closed per 2026-11-17 decision).
+# MSYS/Git-Bash fix (2026-11-19): native python.exe never sees /c/... paths —
+# cygpath -m normalizes them to C:/... (idempotent on already-native paths).
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+norm() {
+    if command -v cygpath >/dev/null 2>&1; then
+        cygpath -m "$1" 2>/dev/null || printf '%s' "$1"
+    else
+        printf '%s' "$1"
+    fi
+}
 for PG in "${PROVGATE:-}" "$ROOT/provgate.py" "$HOME/AppData/Local/hermes/profiles/nimbus/scripts/provgate.py" "$HOME/.hermes/profiles/nimbus/scripts/provgate.py"; do
     if [ -n "$PG" ] && [ -f "$PG" ]; then
-        exec python "$PG" check-message -F "$1"
+        exec python "$(norm "$PG")" check-message -F "$(norm "$1")"
     fi
 done
 echo "provgate: provgate.py not found (set PROVGATE=/abs/path/provgate.py) — commit refused (fail-closed)" >&2
